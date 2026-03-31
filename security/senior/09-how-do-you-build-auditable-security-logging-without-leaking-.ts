@@ -3,7 +3,7 @@ export const level = 'senior' as const;
 export const question = "How do you build auditable security logging without leaking sensitive data?" as const;
 
 export function answer(): string {
-  return "How do you build auditable security logging without leaking sensitive data: explain the core concept, key trade-offs, and one production-ready implementation pattern.";
+  return "For \"How do you build auditable security logging without leaking sensitive data\", give a clear definition, outline key trade-offs, and finish with one practical production-ready pattern.";
 }
 
 export function shortExample(): string {

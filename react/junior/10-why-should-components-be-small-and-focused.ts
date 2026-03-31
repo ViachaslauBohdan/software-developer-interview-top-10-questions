@@ -3,7 +3,7 @@ export const level = 'junior' as const;
 export const question = "Why should components be small and focused?" as const;
 
 export function answer(): string {
-  return "Why should components be small and focused: explain the core concept, key trade-offs, and one production-ready implementation pattern.";
+  return "For \"Why should components be small and focused\", give a clear definition, outline key trade-offs, and finish with one practical production-ready pattern.";
 }
 
 export function shortExample(): string {

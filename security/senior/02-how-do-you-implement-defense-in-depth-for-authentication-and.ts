@@ -3,7 +3,7 @@ export const level = 'senior' as const;
 export const question = "How do you implement defense-in-depth for authentication and authorization?" as const;
 
 export function answer(): string {
-  return "How do you implement defense-in-depth for authentication and authorization: explain the core concept, key trade-offs, and one production-ready implementation pattern.";
+  return "For \"How do you implement defense-in-depth for authentication and authorization\", give a clear definition, outline key trade-offs, and finish with one practical production-ready pattern.";
 }
 
 export function shortExample(): string {

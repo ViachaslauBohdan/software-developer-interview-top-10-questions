@@ -3,7 +3,7 @@ export const level = 'senior' as const;
 export const question = "How do you control and forecast AWS costs for a fast-growing serverless platform?" as const;
 
 export function answer(): string {
-  return "How do you control and forecast AWS costs for a fast-growing serverless platform: explain the core concept, key trade-offs, and one production-ready implementation pattern.";
+  return "For \"How do you control and forecast AWS costs for a fast-growing serverless platform\", give a clear definition, outline key trade-offs, and finish with one practical production-ready pattern.";
 }
 
 export function shortExample(): string {

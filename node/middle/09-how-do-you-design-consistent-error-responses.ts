@@ -3,7 +3,7 @@ export const level = 'middle' as const;
 export const question = "How do you design consistent error responses?" as const;
 
 export function answer(): string {
-  return "How do you design consistent error responses: explain the core concept, key trade-offs, and one production-ready implementation pattern.";
+  return "For \"How do you design consistent error responses\", give a clear definition, outline key trade-offs, and finish with one practical production-ready pattern.";
 }
 
 export function shortExample(): string {

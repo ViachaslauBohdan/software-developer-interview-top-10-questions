@@ -3,7 +3,7 @@ export const level = 'senior' as const;
 export const question = "How do you balance security controls with developer velocity and product UX?" as const;
 
 export function answer(): string {
-  return "How do you balance security controls with developer velocity and product UX: explain the core concept, key trade-offs, and one production-ready implementation pattern.";
+  return "For \"How do you balance security controls with developer velocity and product UX\", give a clear definition, outline key trade-offs, and finish with one practical production-ready pattern.";
 }
 
 export function shortExample(): string {

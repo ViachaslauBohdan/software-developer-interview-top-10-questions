@@ -3,7 +3,7 @@ export const level = 'junior' as const;
 export const question = "What does useState return?" as const;
 
 export function answer(): string {
-  return "What does useState return: explain the core concept, key trade-offs, and one production-ready implementation pattern.";
+  return "For \"What does useState return\", give a clear definition, outline key trade-offs, and finish with one practical production-ready pattern.";
 }
 
 export function shortExample(): string {

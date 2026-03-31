@@ -3,7 +3,7 @@ export const level = 'junior' as const;
 export const question = "What is the difference between props and state?" as const;
 
 export function answer(): string {
-  return "What is the difference between props and state: explain the core concept, key trade-offs, and one production-ready implementation pattern.";
+  return "For \"What is the difference between props and state\", give a clear definition, outline key trade-offs, and finish with one practical production-ready pattern.";
 }
 
 export function shortExample(): string {

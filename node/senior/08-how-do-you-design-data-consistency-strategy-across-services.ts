@@ -3,7 +3,7 @@ export const level = 'senior' as const;
 export const question = "How do you design data consistency strategy across services?" as const;
 
 export function answer(): string {
-  return "How do you design data consistency strategy across services: explain the core concept, key trade-offs, and one production-ready implementation pattern.";
+  return "For \"How do you design data consistency strategy across services\", give a clear definition, outline key trade-offs, and finish with one practical production-ready pattern.";
 }
 
 export function shortExample(): string {

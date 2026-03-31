@@ -15,7 +15,8 @@ const roots = [
   'web/src/questions/node',
   'web/src/questions/nest',
   'web/src/questions/aws',
-  'web/src/questions/security'
+  'web/src/questions/security',
+  'web/src/questions/css'
 ];
 
 const levels = ['junior', 'middle', 'senior'];
@@ -27,6 +28,7 @@ function inferTech(filePath) {
   if (filePath.includes('/nest/')) return 'nest';
   if (filePath.includes('/aws/')) return 'aws';
   if (filePath.includes('/security/')) return 'security';
+  if (filePath.includes('/css/')) return 'css';
   return 'react';
 }
 
@@ -38,6 +40,7 @@ function answerFor(tech, level, question) {
   if (tech === 'nest') return nestAnswer(q, level, question);
   if (tech === 'aws') return awsAnswer(q, level, question);
   if (tech === 'security') return securityAnswer(q, level, question);
+  if (tech === 'css') return cssAnswer(q, level, question);
   const byLevel = {
     junior: 'Give a simple definition, one practical use-case, and one short example.',
     middle: 'Explain trade-offs, typical mistakes, and show a small production-style snippet.',
@@ -48,7 +51,7 @@ function answerFor(tech, level, question) {
 
 function specificFallback(question) {
   const clean = question.replace(/\?$/, '');
-  return `${clean}: explain the core concept, key trade-offs, and one production-ready implementation pattern.`;
+  return `For "${clean}", give a clear definition, outline key trade-offs, and finish with one practical production-ready pattern.`;
 }
 
 function reactAnswer(q, level, question) {
@@ -200,6 +203,18 @@ function securityAnswer(q, level, question) {
   if (q.includes('csrf')) return 'Mitigate CSRF with SameSite cookies, anti-CSRF tokens, and server-side origin/referrer validation.';
   if (q.includes('injection')) return 'Prevent injections via parameterized queries, strict schema validation, and never concatenating untrusted input.';
   if (q.includes('secrets')) return 'Use secret managers, runtime injection, scoped access, and rotation policies with audit trails.';
+  return specificFallback(question);
+}
+
+function cssAnswer(q, level, question) {
+  if (q.includes('specificity')) return 'Specificity controls which CSS rules win; keep selectors simple and avoid accidental overrides.';
+  if (q.includes('flexbox')) return 'Flexbox is best for one-dimensional alignment and spacing across rows or columns.';
+  if (q.includes('grid')) return 'CSS Grid is ideal for two-dimensional layout where rows and columns are controlled together.';
+  if (q.includes('responsive')) return 'Responsive CSS combines fluid sizing, breakpoints, and content-first layout adjustments.';
+  if (q.includes('accessibility')) return 'Accessible CSS includes clear focus styles, sufficient contrast, and reduced-motion support.';
+  if (q.includes('performance')) return 'CSS performance improves when you reduce costly paint operations and avoid layout thrashing.';
+  if (q.includes('container query')) return 'Container queries let components adapt by parent size, improving reuse across page contexts.';
+  if (q.includes('design token')) return 'Design tokens centralize visual decisions so themes and components stay consistent across products.';
   return specificFallback(question);
 }
 
@@ -642,6 +657,7 @@ function exampleFor(tech, question) {
   if (tech === 'node') return nodeExample(question);
   if (tech === 'nest') return nestExample(question);
   if (tech === 'security') return securityExample(question);
+  if (tech === 'css') return cssExample(question);
   return awsExample(question);
 }
 
@@ -753,6 +769,46 @@ if (!dbPassword) throw new Error('Missing DB_PASSWORD');`;
   return `// Security headers baseline
 import helmet from 'helmet';
 app.use(helmet());`;
+}
+
+function cssExample(question) {
+  const q = question.toLowerCase();
+  if (q.includes('flexbox')) {
+    return `.toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+}`;
+  }
+  if (q.includes('grid')) {
+    return `.layout {
+  display: grid;
+  grid-template-columns: 240px 1fr;
+  gap: 1rem;
+}`;
+  }
+  if (q.includes('responsive')) {
+    return `.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1rem;
+}`;
+  }
+  if (q.includes('specificity')) {
+    return `.btn { color: #111; }
+.btn-primary { color: #fff; background: #2563eb; }`;
+  }
+  if (q.includes('container query')) {
+    return `.shell { container-type: inline-size; }
+@container (min-width: 42rem) {
+  .card { grid-template-columns: 1fr 1fr; }
+}`;
+  }
+  return `.button:focus-visible {
+  outline: 2px solid #2563eb;
+  outline-offset: 2px;
+}`;
 }
 
 async function processFile(filePath) {

@@ -3,7 +3,7 @@ export const level = 'junior' as const;
 export const question = "What is JSX and why do we use it in React?" as const;
 
 export function answer(): string {
-  return "What is JSX and why do we use it in React: explain the core concept, key trade-offs, and one production-ready implementation pattern.";
+  return "For \"What is JSX and why do we use it in React\", give a clear definition, outline key trade-offs, and finish with one practical production-ready pattern.";
 }
 
 export function shortExample(): string {

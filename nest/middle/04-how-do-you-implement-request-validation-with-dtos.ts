@@ -3,7 +3,7 @@ export const level = 'middle' as const;
 export const question = "How do you implement request validation with DTOs?" as const;
 
 export function answer(): string {
-  return "How do you implement request validation with DTOs: explain the core concept, key trade-offs, and one production-ready implementation pattern.";
+  return "For \"How do you implement request validation with DTOs\", give a clear definition, outline key trade-offs, and finish with one practical production-ready pattern.";
 }
 
 export function shortExample(): string {

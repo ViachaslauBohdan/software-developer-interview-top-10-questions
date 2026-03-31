@@ -1,13 +1,15 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import './App.css';
 
 type Level = 'junior' | 'middle' | 'senior';
-type Technology = 'react' | 'next' | 'node' | 'nest' | 'aws' | 'security';
+type Technology = 'react' | 'next' | 'node' | 'nest' | 'aws' | 'security' | 'css';
 
 type QuestionModule = {
   question: string;
   level: Level;
   technology: Technology;
+  tags?: readonly string[];
+  trending?: boolean;
   answer: () => string;
   shortExample: () => string;
 };
@@ -21,6 +23,8 @@ type QuestionItem = {
   technology: Technology;
   answer: string;
   shortExample: string;
+  tags: string[];
+  trending: boolean;
   categories: InterviewCategory[];
 };
 
@@ -36,14 +40,18 @@ const allQuestions: QuestionItem[] = Object.entries(namedModules)
       technology: value.technology,
       answer: value.answer(),
       shortExample: value.shortExample(),
+      tags: [...(value.tags ?? [])],
+      trending: value.trending ?? false,
       categories: getCategories(value.question, value.level)
     };
   })
   .sort((a, b) => a.question.localeCompare(b.question));
 
-const techOptions: Array<Technology | 'all'> = ['all', 'react', 'next', 'node', 'nest', 'aws', 'security'];
+const techOptions: Array<Technology | 'all'> = ['all', 'react', 'next', 'node', 'nest', 'aws', 'security', 'css'];
 const levelOptions: Array<Level | 'all'> = ['all', 'junior', 'middle', 'senior'];
 const categoryOptions: Array<InterviewCategory | 'all'> = ['all', 'Most Asked', 'Less Frequently Asked', 'Tricky Questions', 'Senior Deep Dive'];
+const trendyOptions: Array<'all' | 'trending'> = ['all', 'trending'];
+const commonOptions: Array<'all' | 'top-common'> = ['all', 'top-common'];
 
 function getCategories(question: string, level: Level): InterviewCategory[] {
   const q = question.toLowerCase();
@@ -88,8 +96,42 @@ function App() {
   const [tech, setTech] = useState<Technology | 'all'>('all');
   const [level, setLevel] = useState<Level | 'all'>('all');
   const [category, setCategory] = useState<InterviewCategory | 'all'>('all');
+  const [trendy, setTrendy] = useState<'all' | 'trending'>('all');
+  const [common, setCommon] = useState<'all' | 'top-common'>('all');
   const [search, setSearch] = useState('');
   const [selectedId, setSelectedId] = useState<string | null>(null);
+
+  const quickMode = useMemo<'all' | 'top-common' | 'trending' | 'both'>(() => {
+    if (common === 'top-common' && trendy === 'trending') return 'both';
+    if (common === 'top-common') return 'top-common';
+    if (trendy === 'trending') return 'trending';
+    return 'all';
+  }, [common, trendy]);
+
+  useEffect(() => {
+    const onKeyDown = (event: KeyboardEvent) => {
+      const target = event.target as HTMLElement | null;
+      const tag = target?.tagName?.toLowerCase();
+      if (tag === 'input' || tag === 'select' || tag === 'textarea' || target?.isContentEditable) return;
+
+      if (event.key === '1') {
+        setCommon('all');
+        setTrendy('all');
+      } else if (event.key === '2') {
+        setCommon('top-common');
+        setTrendy('all');
+      } else if (event.key === '3') {
+        setCommon('all');
+        setTrendy('trending');
+      } else if (event.key === '4') {
+        setCommon('top-common');
+        setTrendy('trending');
+      }
+    };
+
+    window.addEventListener('keydown', onKeyDown);
+    return () => window.removeEventListener('keydown', onKeyDown);
+  }, []);
 
   const filtered = useMemo(() => {
     const searchText = search.trim().toLowerCase();
@@ -97,10 +139,12 @@ function App() {
       if (tech !== 'all' && item.technology !== tech) return false;
       if (level !== 'all' && item.level !== level) return false;
       if (category !== 'all' && !item.categories.includes(category)) return false;
+      if (trendy === 'trending' && !item.trending) return false;
+      if (common === 'top-common' && !item.tags.includes('top-common')) return false;
       if (searchText && !item.question.toLowerCase().includes(searchText)) return false;
       return true;
     });
-  }, [tech, level, category, search]);
+  }, [tech, level, category, trendy, common, search]);
 
   const selected = filtered.find((q) => q.id === selectedId) ?? filtered[0] ?? null;
 
@@ -151,6 +195,27 @@ function App() {
             ))}
           </select>
         </label>
+        <label>
+          Most Trendy
+          <select value={trendy} onChange={(e) => setTrendy(e.target.value as 'all' | 'trending')}>
+            {trendyOptions.map((option) => (
+              <option key={option} value={option}>
+                {option === 'all' ? 'All' : 'Most Trendy'}
+              </option>
+            ))}
+          </select>
+        </label>
+
+        <label>
+          Top Common
+          <select value={common} onChange={(e) => setCommon(e.target.value as 'all' | 'top-common')}>
+            {commonOptions.map((option) => (
+              <option key={option} value={option}>
+                {option === 'all' ? 'All' : 'Top Common'}
+              </option>
+            ))}
+          </select>
+        </label>
 
         <label className="search-input">
           Search
@@ -160,6 +225,45 @@ function App() {
             placeholder="Try: caching, event loop, hydration..."
           />
         </label>
+      </section>
+
+      <section className="quick-toggles" aria-label="Quick filters">
+        <button
+          className={`toggle-btn ${quickMode === 'all' ? 'active' : ''}`}
+          onClick={() => {
+            setCommon('all');
+            setTrendy('all');
+          }}
+        >
+          All (1)
+        </button>
+        <button
+          className={`toggle-btn ${quickMode === 'top-common' ? 'active' : ''}`}
+          onClick={() => {
+            setCommon('top-common');
+            setTrendy('all');
+          }}
+        >
+          Top Common (2)
+        </button>
+        <button
+          className={`toggle-btn ${quickMode === 'trending' ? 'active' : ''}`}
+          onClick={() => {
+            setCommon('all');
+            setTrendy('trending');
+          }}
+        >
+          Most Trendy (3)
+        </button>
+        <button
+          className={`toggle-btn ${quickMode === 'both' ? 'active' : ''}`}
+          onClick={() => {
+            setCommon('top-common');
+            setTrendy('trending');
+          }}
+        >
+          Both (4)
+        </button>
       </section>
 
       <main className="content-grid">
@@ -180,6 +284,8 @@ function App() {
                 <div className="chip-row">
                   <span className="chip tech">{item.technology}</span>
                   <span className="chip level">{item.level}</span>
+                  {item.trending && <span className="chip trending">Most Trendy</span>}
+                  {item.tags.includes('top-common') && <span className="chip common">Top Common</span>}
                   {item.categories.map((cat) => (
                     <span key={cat} className="chip category">
                       {cat}
@@ -199,6 +305,8 @@ function App() {
               <div className="chip-row">
                 <span className="chip tech">{selected.technology}</span>
                 <span className="chip level">{selected.level}</span>
+                {selected.trending && <span className="chip trending">Most Trendy</span>}
+                {selected.tags.includes('top-common') && <span className="chip common">Top Common</span>}
                 {selected.categories.map((cat) => (
                   <span key={cat} className="chip category">
                     {cat}
