@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import './App.css';
+import LearnReactPage from './pages/LearnReactPage';
 
 type Level = 'junior' | 'middle' | 'senior';
 type Technology = 'react' | 'next' | 'node' | 'nest' | 'aws' | 'security' | 'css';
@@ -93,6 +94,7 @@ function getCategories(question: string, level: Level): InterviewCategory[] {
 }
 
 function App() {
+  const [pathname, setPathname] = useState(() => window.location.pathname);
   const [tech, setTech] = useState<Technology | 'all'>('all');
   const [level, setLevel] = useState<Level | 'all'>('all');
   const [category, setCategory] = useState<InterviewCategory | 'all'>('all');
@@ -107,6 +109,12 @@ function App() {
     if (trendy === 'trending') return 'trending';
     return 'all';
   }, [common, trendy]);
+
+  useEffect(() => {
+    const onPopState = () => setPathname(window.location.pathname);
+    window.addEventListener('popstate', onPopState);
+    return () => window.removeEventListener('popstate', onPopState);
+  }, []);
 
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
@@ -148,6 +156,17 @@ function App() {
 
   const selected = filtered.find((q) => q.id === selectedId) ?? filtered[0] ?? null;
 
+  const navigateTo = (to: string) => {
+    if (window.location.pathname !== to) {
+      window.history.pushState({}, '', to);
+    }
+    setPathname(to);
+  };
+
+  if (pathname === '/learn/react') {
+    return <LearnReactPage onBackHome={() => navigateTo('/')} />;
+  }
+
   return (
     <div className="app-shell">
       <header className="topbar">
@@ -155,6 +174,18 @@ function App() {
           <p className="eyebrow">Frontend + Backend Interview Coach</p>
           <h1>Interview Question Explorer</h1>
           <p className="subtitle">English-only question bank with quick filtering by stack, level, and tricky areas.</p>
+          <p className="subtitle">
+            React learning route:{' '}
+            <a
+              href="/learn/react"
+              onClick={(event) => {
+                event.preventDefault();
+                navigateTo('/learn/react');
+              }}
+            >
+              /learn/react
+            </a>
+          </p>
         </div>
         <div className="stat-card">
           <span>Total Questions</span>
