@@ -1,0 +1,8 @@
+{
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --test unit integration",
+    "test:e2e": "playwright test e2e/playwright.spec.js"
+  }
+}
