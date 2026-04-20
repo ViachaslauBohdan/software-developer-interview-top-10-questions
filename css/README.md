@@ -1,5 +1,9 @@
 # CSS Interview Essentials (CSS, Sass, Less, CSS-in-JS)
 
+## Practical Sections
+
+- `animations/` - CSS animation examples with docs, snippets, and live showcase.
+
 ## Most crucial things to understand
 
 1. CSS fundamentals and browser model
