@@ -44,6 +44,15 @@
 - Apply circuit breakers, bulkheads, and timeouts to downstream calls.
 - Use rate limiting and backpressure to protect core dependencies.
 
+## 🔁 Idempotency (How to Provide It)
+- Use an `Idempotency-Key` for write operations that can be retried (`POST` payments/orders/jobs).
+- Scope the key by tenant/user + endpoint + payload hash to prevent accidental key reuse.
+- Store key state in `Redis` or DB with TTL: `processing`, `succeeded`, `failed`.
+- On duplicate requests, return the stored response (or operation result) instead of re-executing side effects.
+- Add DB-level protection with `UNIQUE` constraints and upserts for natural deduplication.
+- For queues/events, include a message ID and keep a "processed IDs" store to ignore duplicates safely.
+- Keep handlers side-effect safe: external calls should be guarded, retried carefully, and recorded atomically.
+
 ## 📊 Monitoring and Profiling
 - Metrics: latency (`p50/p95/p99`), throughput, error rate, saturation.
 - Logging: structured logs with correlation/request IDs.
